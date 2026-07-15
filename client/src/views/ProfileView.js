@@ -22,7 +22,9 @@ export class ProfileView {
           <div class="sidebar-user">
             <strong>${user.firstName} ${user.lastName}</strong>
             <span>${user.role}</span>
-            <button id="logout-button" class="text-button" type="button">Logout</button>
+            <button id="logout-button" class="text-button" type="button" aria-label="Logout from the current session">
+              Logout
+            </button>
           </div>
         </aside>
 
@@ -191,8 +193,29 @@ export class ProfileView {
       });
     });
 
-    this.root.querySelector("#logout-button").addEventListener("click", onLogout);
+
+
+
+
+
+
+    const logoutButton = this.root.querySelector("#logout-button");
+
+    if (logoutButton) {
+      logoutButton.addEventListener("click", async () => {
+        const confirmed = await showConfirmationAlert();
+
+        if (confirmed) {
+          onLogout();
+        }
+      });
+    }
   }
+
+
+
+
+
 
   setLoading(loading) {
     const button = this.root.querySelector("#save-profile-button");
@@ -213,13 +236,11 @@ export class ProfileView {
     };
   }
   clearGoalForm() {
-  document
-    .getElementById("goal-form")
-    .reset();
-}
-renderGoals(goals) {
-  const goalsList =
-    document.getElementById("goals-list");
+    this.root.querySelector("#goal-form")?.reset();
+  }
+
+  renderGoals(goals) {
+    const goalsList = this.root.querySelector("#goals-list");
 
   if (!goals.length) {
     goalsList.innerHTML = `
@@ -302,24 +323,26 @@ escapeHtml(value = "") {
     .replaceAll("'", "&#039;");
 }
 showGoalMessage(message, type = "success") {
-  const messageElement =
-    document.getElementById("goals-message");
+  const messageElement = this.root.querySelector("#goals-message");
+
+  if (!messageElement) {
+    return;
+  }
 
   messageElement.textContent = message;
-
-  messageElement.className =
-    `message message-${type}`;
+  messageElement.className = `message message-${type}`;
 }
 bindGoalEvents({
   onCreate,
   onToggle,
   onDelete
 }) {
-  const form =
-    document.getElementById("goal-form");
+  const form = this.root.querySelector("#goal-form");
+  const goalsList = this.root.querySelector("#goals-list");
 
-  const goalsList =
-    document.getElementById("goals-list");
+  if (!form || !goalsList) {
+    return;
+  }
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -369,5 +392,5 @@ bindGoalEvents({
       );
     }
   );
-};
+  }
 }

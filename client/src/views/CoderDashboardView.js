@@ -1,3 +1,5 @@
+import { showConfirmationAlert } from '../components/alerts.js';
+
 function statusClass(status) {
   return `status-badge status-${status.toLowerCase()}`;
 }
@@ -123,7 +125,13 @@ export class CoderDashboardView {
       }
     });
 
-    this.root.querySelector("#logout-button").addEventListener("click", onLogout);
+    this.root.querySelector("#logout-button").addEventListener("click", async () => {
+      const confirmed = await showConfirmationAlert();
+
+      if (confirmed) {
+        onLogout();
+      }
+    });
   }
 
   renderRequests(requests) {
