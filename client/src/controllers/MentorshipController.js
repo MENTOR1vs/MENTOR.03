@@ -1,3 +1,11 @@
+import { 
+  showConfirmationAlert, 
+  showTextInputAlert, 
+  showAcceptAlert, 
+  showRejectAlert, 
+  showCompleteAlert 
+} from '../components/alerts.js';
+
 export class MentorshipController {
   constructor({ api, router, view, user }) {
     this.api = api;
@@ -50,13 +58,31 @@ export class MentorshipController {
 
     if (!request) return;
 
-    const topic = window.prompt("Edit the topic:", request.topic);
+    const confirmed = await showConfirmationAlert({
+      title: 'Edit mentorship request',
+      text: 'You are about to update the topic and description of this request.'
+    });
+
+    if (!confirmed) return;
+
+    const topic = await showTextInputAlert({
+      title: 'Edit topic',
+      text: 'Update the topic for this mentorship request.',
+      inputLabel: 'Topic',
+      inputValue: request.topic,
+      confirmButtonText: 'Continue'
+    });
+
     if (topic === null) return;
 
-    const description = window.prompt(
-      "Edit the description:",
-      request.description
-    );
+    const description = await showTextInputAlert({
+      title: 'Edit description',
+      text: 'Update the description for this mentorship request.',
+      inputLabel: 'Description',
+      inputValue: request.description,
+      confirmButtonText: 'Continue'
+    });
+
     if (description === null) return;
 
     try {
@@ -73,9 +99,10 @@ export class MentorshipController {
   }
 
   async deleteRequest(id) {
-    const confirmed = window.confirm(
-      "Delete this pending mentorship request?"
-    );
+    const confirmed = await showConfirmationAlert({
+      title: 'Delete request',
+      text: 'Are you sure you want to delete this mentorship request? This action cannot be undone.'
+    });
 
     if (!confirmed) return;
 
@@ -89,6 +116,22 @@ export class MentorshipController {
   }
 
   async changeStatus(id, data) {
+    const request = this.requests.find((item) => item.id === id);
+
+    if (!request) return;
+
+    let confirmed = true;
+
+    if (data.status === 'ACCEPTED') {
+      confirmed = await showAcceptAlert(request.topic, request.coder?.name || 'Coder');
+    } else if (data.status === 'REJECTED') {
+      confirmed = await showRejectAlert(request.topic);
+    } else if (data.status === 'COMPLETED') {
+      confirmed = await showCompleteAlert(request.topic);
+    }
+
+    if (!confirmed) return;
+
     try {
       const response = await this.api.patch(`/mentorships/${id}`, data);
       this.view.showMessage(response.message);

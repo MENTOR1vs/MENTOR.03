@@ -1,3 +1,12 @@
+import {
+  showConfirmationAlert,
+  showSuccessAlert,
+  showErrorAlert,
+  showWarningAlert,
+  showInfoAlert,
+  showTextInputAlert
+} from '../components/alerts';
+
 export class ProfileView {
   constructor(root) {
     this.root = root;
@@ -379,9 +388,10 @@ bindGoalEvents({
         return;
       }
 
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this goal?"
-      );
+      const confirmed = await showConfirmationAlert({
+        title: 'Delete goal',
+        text: 'Are you sure you want to delete this goal? This action cannot be undone.'
+      });
 
       if (!confirmed) {
         return;

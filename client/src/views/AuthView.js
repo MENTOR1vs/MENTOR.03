@@ -9,29 +9,11 @@ export class AuthView {
         <div class="auth-card">
           <aside class="auth-brand">
             <div>
-              <p class="eyebrow">PROJECT INTEGRATOR</p>
               <h1>MENTOR</h1>
               <p>
                 A simple platform where Coders request academic support and
                 Mentors organize each session.
               </p>
-            </div>
-
-            <div class="brand-benefits">
-              <article>
-                <span>01</span>
-                <div>
-                  <strong>Request support</strong>
-                  <p>Describe the topic and the problem you need to solve.</p>
-                </div>
-              </article>
-              <article>
-                <span>02</span>
-                <div>
-                  <strong>Organize the session</strong>
-                  <p>The Mentor assigns a date and records observations.</p>
-                </div>
-              </article>
             </div>
           </aside>
 

@@ -1,3 +1,5 @@
+import { showConfirmationAlert, showSaveProfileAlert, showCreateGoalAlert } from '../components/alerts.js';
+
 export class ProfileController {
   constructor({ api, router, view, user }) {
     this.api = api;
@@ -54,6 +56,10 @@ async loadGoals() {
   }
 }
   async save(data) {
+    const confirmed = await showSaveProfileAlert();
+
+    if (!confirmed) return;
+
     this.view.setLoading(true);
 
     try {
@@ -66,7 +72,11 @@ async loadGoals() {
       this.view.setLoading(false);
     }
   }
-  async createGoal(data) {
+async createGoal(data) {
+  const confirmed = await showCreateGoalAlert();
+
+  if (!confirmed) return;
+
   try {
     await this.api.post(
       "/users/me/goals",
@@ -88,6 +98,7 @@ async loadGoals() {
     );
   }
 }
+
 async toggleGoal(goalId, completed) {
   try {
     await this.api.patch(

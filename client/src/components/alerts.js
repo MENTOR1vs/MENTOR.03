@@ -13,22 +13,61 @@ const blueTheme = {
   }
 }
 
-export const showConfirmationAlert = () => {
-  
+export const showConfirmationAlert = ({
+  title = 'Confirm action',
+  text = 'This action will be applied to your account.'
+} = {}) => {
   return Swal.fire({
     ...blueTheme,
-    title: 'Confirm action',
-    text: 'This action will be applied to your account.',
+    title,
+    text,
     icon: 'question',
     showCancelButton: true,
     confirmButtonText: 'Continue',
     cancelButtonText: 'Cancel'
   }).then((result) => {
-    
-    return result.isConfirmed; 
+    return result.isConfirmed;
   });
 };
 
+export const showTextInputAlert = ({
+  title = 'Enter text',
+  text = 'Please provide the requested value.',
+  inputLabel = 'Value',
+  inputPlaceholder = 'Type here',
+  inputValue = '',
+  confirmButtonText = 'Save',
+  validationMessage = 'Please enter a value.'
+} = {}) => {
+  return Swal.fire({
+    ...blueTheme,
+    title,
+    text,
+    input: 'text',
+    inputLabel,
+    inputPlaceholder,
+    inputValue,
+    showCancelButton: true,
+    confirmButtonText,
+    cancelButtonText: 'Cancel',
+    preConfirm: (value) => {
+      const trimmedValue = value?.trim();
+
+      if (!trimmedValue) {
+        Swal.showValidationMessage(validationMessage);
+        return false;
+      }
+
+      return trimmedValue;
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      return result.value;
+    }
+
+    return null;
+  });
+};
 
 export const showSuccessAlert = () => {
   Swal.fire({
@@ -69,3 +108,38 @@ export const showInfoAlert = () => {
     confirmButtonText: 'Great'
   })
 }
+
+export const showAcceptAlert = (topic, mentorName) => {
+  return showConfirmationAlert({
+    title: 'Accept mentorship request',
+    text: `Accept "${topic}" from ${mentorName}? Schedule a session date below.`
+  });
+};
+
+export const showRejectAlert = (topic) => {
+  return showConfirmationAlert({
+    title: 'Reject mentorship request',
+    text: `Are you sure you want to reject "${topic}"? This action cannot be undone.`
+  });
+};
+
+export const showCompleteAlert = (topic) => {
+  return showConfirmationAlert({
+    title: 'Mark session as completed',
+    text: `Confirm that you have completed the mentorship session for "${topic}".`
+  });
+};
+
+export const showSaveProfileAlert = () => {
+  return showConfirmationAlert({
+    title: 'Update profile',
+    text: 'Confirm to save your profile changes.'
+  });
+};
+
+export const showCreateGoalAlert = () => {
+  return showConfirmationAlert({
+    title: 'Create new goal',
+    text: 'Confirm to create this personal goal.'
+  });
+};

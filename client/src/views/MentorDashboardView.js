@@ -45,7 +45,7 @@ export class MentorDashboardView {
               <h2>Hello, ${user.firstName}</h2>
               <p>Review requests, schedule sessions and record results.</p>
             </div>
-            <a class="secondary-button" href="#/profile">Edit profile</a>
+            <a  class="secondary-button" href="#/profile">Edit profile</a>
           </header>
 
           <div id="dashboard-message" class="message hidden" aria-live="polite"></div>
