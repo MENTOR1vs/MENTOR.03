@@ -1,3 +1,5 @@
+import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
+
 function statusClass(status) {
   return `status-badge status-${status.toLowerCase()}`;
 }
@@ -36,6 +38,9 @@ export class CoderDashboardView {
           <div class="sidebar-user">
             <strong>${user.firstName} ${user.lastName}</strong>
             <span>Coder · ${user.clanName || "No clan"}</span>
+
+            ${themeToggleTemplate()}
+
             <button id="logout-button" class="text-button" type="button">Logout</button>
           </div>
         </aside>
@@ -130,6 +135,8 @@ export class CoderDashboardView {
     });
 
     this.root.querySelector("#logout-button").addEventListener("click", onLogout);
+
+    bindThemeToggle(this.root);
   }
 
   renderRequests(requests) {
