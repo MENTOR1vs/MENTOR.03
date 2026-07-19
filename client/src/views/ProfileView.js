@@ -1,4 +1,4 @@
-import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
+import { themeToggleTemplate, bindThemeToggle, appearanceTemplate, bindAppearance } from "../utils/theme.js";
 import { confirmAction } from "../utils/alerts.js";
 
 // Renders the profile screen and the personal goals experience for the user.
@@ -128,6 +128,9 @@ const dashboardRoute =
               </button>
             </form>
           </article>
+
+          ${appearanceTemplate()}
+
                 <section class="goals-section">
   <div class="section-header">
     <div>
@@ -226,6 +229,7 @@ const dashboardRoute =
     this.root.querySelector("#logout-button").addEventListener("click", onLogout);
 
     bindThemeToggle(this.root);
+    bindAppearance(this.root);
   }
 
   setLoading(loading) {
