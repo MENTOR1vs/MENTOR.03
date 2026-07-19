@@ -1,5 +1,3 @@
-import { bindThemeToggle, getCurrentTheme } from "../utils/theme.js";
-
 // Renders the authentication experience for login and registration.
 // Renderiza la experiencia de autenticación para login y registro.
 export class AuthView {
@@ -10,10 +8,10 @@ export class AuthView {
   render({ initialTab = "login", clans = [] } = {}) {
     // Builds the auth interface and injects the available clans into the form.
     // Construye la interfaz de autenticación e inyecta los clanes disponibles en el formulario.
-    const isDark = getCurrentTheme() === "dark";
 
     this.root.innerHTML = `
-      <section class="auth-page">
+      <section class="auth-page theme-light-locked">
+        <a class="brand-mark auth-home-link" href="#/">MENTOR</a>
 
         <div class="auth-card">
           <aside class="auth-brand">
@@ -241,8 +239,6 @@ export class AuthView {
         event.preventDefault();
         onRegister(this.getRegisterData());
       });
-
-    bindThemeToggle(this.root);
   }
 
   getLoginData() {
