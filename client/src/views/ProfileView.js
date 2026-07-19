@@ -1,3 +1,6 @@
+import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
+import { confirmAction } from "../utils/alerts.js";
+
 // Renders the profile screen and the personal goals experience for the user.
 // Renderiza la pantalla de perfil y la experiencia de metas personales del usuario.
 export class ProfileView {
@@ -8,7 +11,15 @@ export class ProfileView {
   render({ user, clans }) {
     // Builds the profile form and the goals section with the current user data.
     // Construye el formulario de perfil y la sección de metas con los datos actuales del usuario.
-    const dashboardRoute = user.role === "CODER" ? "#/coder" : "#/mentor";
+    const dashboardRoutes = {
+  CODER: "#/coder",
+  MENTOR: "#/mentor",
+  ADMIN: "#/admin"
+};
+
+const dashboardRoute =
+  dashboardRoutes[user.role]
+  || "#/login";
 
     this.root.innerHTML = `
       <div class="dashboard-layout">
@@ -26,6 +37,9 @@ export class ProfileView {
           <div class="sidebar-user">
             <strong>${user.firstName} ${user.lastName}</strong>
             <span>${user.role}</span>
+
+            ${themeToggleTemplate()}
+
             <button id="logout-button" class="text-button" type="button">Logout</button>
           </div>
         </aside>
@@ -210,6 +224,8 @@ export class ProfileView {
     });
 
     this.root.querySelector("#logout-button").addEventListener("click", onLogout);
+
+    bindThemeToggle(this.root);
   }
 
   setLoading(loading) {
@@ -437,9 +453,12 @@ bindGoalEvents({
         return;
       }
 
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this goal?"
-      );
+      const confirmed = await confirmAction({
+        title: "Delete this goal?",
+        text: "This personal goal will be permanently deleted.",
+        confirmButtonText: "Yes, delete it",
+        danger: true
+      });
 
       if (!confirmed) {
         return;
