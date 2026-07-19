@@ -3,11 +3,13 @@ import { CoderDashboardView } from "./views/CoderDashboardView.js";
 import { MentorDashboardView } from "./views/MentorDashboardView.js";
 import { ProfileView } from "./views/ProfileView.js";
 import { AdminDashboardView } from "./views/AdminDashboardView.js";
+import { LandingView } from "./views/LandingView.js";
 
 import { AuthController } from "./controllers/AuthController.js";
 import { MentorshipController } from "./controllers/MentorshipController.js";
 import { ProfileController } from "./controllers/ProfileController.js";
 import { AdminController } from "./controllers/AdminController.js";
+import { setActiveUser, applyUserPreferences } from "./utils/theme.js";
 
 export class AppRouter {
   constructor({
@@ -35,7 +37,7 @@ export class AppRouter {
     // Si no hay una ruta definida,
     // se envía al usuario al login.
     if (!window.location.hash) {
-      this.navigate("/login");
+      this.navigate("/");
       return;
     }
 
@@ -85,11 +87,33 @@ export class AppRouter {
     // #/admin se convierte en /admin.
     const path =
       window.location.hash.slice(1)
-      || "/login";
+      || "/";
 
     // Consulta al usuario autenticado.
     const user =
       await this.getSession();
+
+    // Sincroniza el tema/color con el usuario activo
+    // (o "guest" si no hay sesión) antes de pintar nada.
+    setActiveUser(user ? user.id : null);
+
+    /*
+     * LANDING PAGE
+     *
+     * Ruta pública, siempre con el tema claro
+     * corporativo sin importar la preferencia del usuario.
+     */
+    if (path === "/") {
+      if (user) {
+        this.goToDashboard(user.role);
+        return;
+      }
+
+      const view = new LandingView(this.root);
+      view.render();
+      view.bindEvents();
+      return;
+    }
 
     /*
      * RUTAS PÚBLICAS:
@@ -143,6 +167,11 @@ export class AppRouter {
       this.navigate("/login");
       return;
     }
+
+    // A partir de aquí sí es seguro aplicar el tema
+    // guardado por este usuario (login/landing quedan
+    // siempre fijos en el tema claro corporativo).
+    applyUserPreferences();
 
     /*
      * DASHBOARD DEL CODER
