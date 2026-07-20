@@ -119,7 +119,7 @@ export class LandingView {
               <a href="#/login">Login</a>
               <a href="#/register">Get Started</a>
             </nav>
-            <p class="landing-copyright">© ${new Date().getFullYear()} MENTOR. All rights reserved.</p>
+            <p class="landing-copyright">© ${new Date().getFullYear()} MENTOR.</p>
           </div>
         </footer>
       </div>
