@@ -11,7 +11,7 @@ export class AuthView {
 
     this.root.innerHTML = `
       <section class="auth-page theme-light-locked">
-        <a class="brand-mark auth-home-link" href="#/">MENTOR</a>
+        <a  class="brand-mark auth-home-link"  href="#/home">  MENTOR </a>
 
         <div class="auth-card">
           <aside class="auth-brand">

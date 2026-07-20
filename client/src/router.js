@@ -9,35 +9,47 @@ import { AuthController } from "./controllers/AuthController.js";
 import { MentorshipController } from "./controllers/MentorshipController.js";
 import { ProfileController } from "./controllers/ProfileController.js";
 import { AdminController } from "./controllers/AdminController.js";
-import { setActiveUser, applyUserPreferences } from "./utils/theme.js";
+
+import {
+  setActiveUser,
+  applyUserPreferences
+} from "./utils/theme.js";
+
+const PUBLIC_ROUTES = new Set([
+  "/home",
+  "/login",
+  "/register"
+]);
+
+const PROTECTED_ROUTES = new Set([
+  "/coder",
+  "/mentor",
+  "/admin",
+  "/profile"
+]);
 
 export class AppRouter {
   constructor({
     root,
     api
   }) {
-    // Elemento principal donde se renderizan las vistas.
     this.root = root;
-
-    // Servicio utilizado para comunicarse con la API.
     this.api = api;
-
-    // Guarda una referencia al controlador activo.
     this.currentController = null;
   }
 
   start() {
-    // Cada vez que cambia la URL con hash,
-    // el router vuelve a renderizar la vista.
     window.addEventListener(
       "hashchange",
       () => this.render()
     );
 
-    // Si no hay una ruta definida,
-    // se envía al usuario al login.
+    /*
+     * When the application opens without a hash,
+     * the public landing page becomes the initial route.
+     */
     if (!window.location.hash) {
-      this.navigate("/");
+      this.navigate("/home");
       return;
     }
 
@@ -45,89 +57,197 @@ export class AppRouter {
   }
 
   navigate(path) {
-    // Convierte "/login" en "#/login".
-    window.location.hash = `#${path}`;
+    const nextHash = `#${path}`;
+
+    /*
+     * Setting the same hash does not trigger hashchange.
+     * In that case, render the route directly.
+     */
+    if (
+      window.location.hash ===
+      nextHash
+    ) {
+      this.render();
+      return;
+    }
+
+    window.location.hash =
+      nextHash;
   }
 
-  goToDashboard(role) {
-    // Relaciona cada rol con su dashboard.
+  getDashboardPath(role) {
     const dashboards = {
       CODER: "/coder",
       MENTOR: "/mentor",
       ADMIN: "/admin"
     };
 
-    // Si el rol no existe, vuelve al login.
+    return (
+      dashboards[role] ||
+      "/login"
+    );
+  }
+
+  goToDashboard(role) {
     this.navigate(
-      dashboards[role] || "/login"
+      this.getDashboardPath(role)
     );
   }
 
   async getSession() {
     try {
-      // Consulta al backend quién está autenticado.
-      // La cookie con el JWT se envía automáticamente
-      // desde ApiService mediante credentials: "include".
-      const response = await this.api.get(
-        "/auth/me"
-      );
+      const response =
+        await this.api.get(
+          "/auth/me"
+        );
 
       return response.data;
     } catch {
-      // Si no existe una sesión válida,
-      // devuelve null.
       return null;
     }
   }
 
-  async render() {
-    // Obtiene la ruta después del símbolo #.
-    //
-    // Ejemplo:
-    // #/admin se convierte en /admin.
-    const path =
-      window.location.hash.slice(1)
-      || "/";
+  renderNotFound(user) {
+    const returnPath =
+      user
+        ? this.getDashboardPath(
+            user.role
+          )
+        : "/home";
 
-    // Consulta al usuario autenticado.
+    const returnLabel =
+      user
+        ? "Return to dashboard"
+        : "Return to home";
+
+    this.currentController =
+      null;
+
+    this.root.innerHTML = `
+      <section
+        class="
+          not-found
+          ${
+            user
+              ? ""
+              : "theme-light-locked"
+          }
+        "
+      >
+        <h1>404</h1>
+
+        <h2>Page not found</h2>
+
+        <p>
+          The requested page does not exist.
+        </p>
+
+        <a
+          class="primary-button inline-button"
+          href="#${returnPath}"
+        >
+          ${returnLabel}
+        </a>
+      </section>
+    `;
+  }
+
+  async render() {
+    const rawPath =
+      window.location.hash
+        .slice(1) ||
+      "/home";
+
+    /*
+     * Removes trailing slashes.
+     *
+     * Example:
+     * /home/ becomes /home
+     */
+    const path =
+      rawPath.length > 1
+        ? rawPath.replace(
+            /\/+$/,
+            ""
+          )
+        : rawPath;
+
     const user =
       await this.getSession();
 
-    // Sincroniza el tema/color con el usuario activo
-    // (o "guest" si no hay sesión) antes de pintar nada.
-    setActiveUser(user ? user.id : null);
+    setActiveUser(
+      user
+        ? user.id
+        : null
+    );
 
     /*
-     * LANDING PAGE
-     *
-     * Ruta pública, siempre con el tema claro
-     * corporativo sin importar la preferencia del usuario.
+     * Keeps old links such as "#/" working.
+     * The canonical landing route is now "#/home".
      */
     if (path === "/") {
+      this.navigate("/home");
+      return;
+    }
+
+    const isPublicRoute =
+      PUBLIC_ROUTES.has(path);
+
+    const isProtectedRoute =
+      PROTECTED_ROUTES.has(path);
+
+    /*
+     * The 404 validation must happen before
+     * redirecting unauthenticated users.
+     *
+     * This allows a visitor without a session
+     * to see the 404 page.
+     */
+    if (
+      !isPublicRoute &&
+      !isProtectedRoute
+    ) {
       if (user) {
-        this.goToDashboard(user.role);
-        return;
+        applyUserPreferences();
       }
 
-      const view = new LandingView(this.root);
-      view.render();
-      view.bindEvents();
+      this.renderNotFound(user);
       return;
     }
 
     /*
-     * RUTAS PÚBLICAS:
-     * /login
-     * /register
+     * PUBLIC LANDING PAGE
+     */
+    if (path === "/home") {
+      if (user) {
+        this.goToDashboard(
+          user.role
+        );
+
+        return;
+      }
+
+      this.currentController =
+        null;
+
+      const view =
+        new LandingView(
+          this.root
+        );
+
+      view.render();
+      view.bindEvents();
+
+      return;
+    }
+
+    /*
+     * LOGIN AND REGISTRATION
      */
     if (
-      [
-        "/login",
-        "/register"
-      ].includes(path)
+      path === "/login" ||
+      path === "/register"
     ) {
-      // Si ya existe una sesión,
-      // no se muestra nuevamente el login.
       if (user) {
         this.goToDashboard(
           user.role
@@ -153,31 +273,27 @@ export class AppRouter {
               : "login"
         });
 
-      await this.currentController
+      await this
+        .currentController
         .init();
 
       return;
     }
 
     /*
-     * Desde este punto todas las rutas
-     * necesitan una sesión válida.
+     * All remaining known routes are protected.
      */
     if (!user) {
       this.navigate("/login");
       return;
     }
 
-    // A partir de aquí sí es seguro aplicar el tema
-    // guardado por este usuario (login/landing quedan
-    // siempre fijos en el tema claro corporativo).
     applyUserPreferences();
 
     /*
-     * DASHBOARD DEL CODER
+     * CODER DASHBOARD
      */
     if (path === "/coder") {
-      // Solo un CODER puede entrar.
       if (
         user.role !== "CODER"
       ) {
@@ -201,17 +317,17 @@ export class AppRouter {
           user
         });
 
-      await this.currentController
+      await this
+        .currentController
         .init();
 
       return;
     }
 
     /*
-     * DASHBOARD DEL MENTOR
+     * MENTOR DASHBOARD
      */
     if (path === "/mentor") {
-      // Solo un MENTOR puede entrar.
       if (
         user.role !== "MENTOR"
       ) {
@@ -235,18 +351,20 @@ export class AppRouter {
           user
         });
 
-      await this.currentController
+      await this
+        .currentController
         .init();
 
       return;
     }
 
     /*
-     * DASHBOARD DEL ADMINISTRADOR
+     * ADMIN DASHBOARD
      */
     if (path === "/admin") {
-      // Solo un ADMIN puede entrar.
-      if (user.role !== "ADMIN") {
+      if (
+        user.role !== "ADMIN"
+      ) {
         this.goToDashboard(
           user.role
         );
@@ -267,19 +385,15 @@ export class AppRouter {
           user
         });
 
-      await this.currentController
+      await this
+        .currentController
         .init();
 
       return;
     }
 
     /*
-     * PERFIL
-     *
-     * Puede ser consultado por:
-     * CODER
-     * MENTOR
-     * ADMIN
+     * USER PROFILE
      */
     if (path === "/profile") {
       const view =
@@ -295,30 +409,9 @@ export class AppRouter {
           user
         });
 
-      await this.currentController
+      await this
+        .currentController
         .init();
-
-      return;
     }
-
-    /*
-     * RUTA NO ENCONTRADA
-     */
-    this.root.innerHTML = `
-      <section class="not-found">
-        <h1>404</h1>
-
-        <p>
-          The requested page does not exist.
-        </p>
-
-        <a
-          class="primary-button inline-button"
-          href="#/login"
-        >
-          Return
-        </a>
-      </section>
-    `;
   }
 }
