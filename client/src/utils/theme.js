@@ -23,11 +23,7 @@ function getPreferredTheme() {
   const saved = localStorage.getItem(themeKey());
   if (saved === "dark" || saved === "light") return saved;
 
-  const prefersDark = window.matchMedia?.(
-    "(prefers-color-scheme: dark)"
-  ).matches;
-
-  return prefersDark ? "dark" : "light";
+  return "light";
 }
 
 export function applyTheme(theme) {

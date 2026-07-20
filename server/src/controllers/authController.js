@@ -5,7 +5,7 @@ import { pool } from "../db.js";
 // Normalizes and validates common auth-related data before processing requests.
 // Normaliza y valida datos comunes de autenticación antes de procesar las peticiones.
 function normalizeEmail(email = "") {
-  return email.trim().toLowerCase();
+  return email.trim();
 }
 
 function createToken(user) {
@@ -113,8 +113,8 @@ export async function register(request, response) {
       `,
       [
         normalizedRole === "CODER" ? Number(clanId) : null,
-        firstName.trim(),
-        lastName.trim(),
+        firstName.trim().toLowerCase(),
+        lastName.trim().toLowerCase(),
         normalizedEmail,
         passwordHash,
         normalizedRole

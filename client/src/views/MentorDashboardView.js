@@ -1,4 +1,5 @@
 import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
+import { capitalize} from "../utils/format.js";
 
 function statusClass(status) {
   return `status-badge status-${status.toLowerCase()}`;
@@ -49,7 +50,7 @@ export class MentorDashboardView {
           <header class="dashboard-header">
             <div>
               <p class="eyebrow">MENTOR DASHBOARD</p>
-              <h2>Hello, ${user.firstName}</h2>
+              <h2>Hello, ${capitalize(user.firstName)}</h2>
               <p>Review requests, schedule sessions and record results.</p>
             </div>
             <a class="secondary-button" href="#/profile">Edit profile</a>

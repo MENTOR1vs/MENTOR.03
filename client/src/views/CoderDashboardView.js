@@ -1,4 +1,5 @@
 import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
+import { capitalize} from "../utils/format.js";
 
 function statusClass(status) {
   return `status-badge status-${status.toLowerCase()}`;
@@ -49,7 +50,7 @@ export class CoderDashboardView {
           <header class="dashboard-header">
             <div>
               <p class="eyebrow">CODER DASHBOARD</p>
-              <h2>Hello, ${user.firstName}</h2>
+              <h2>Hello, ${capitalize(user.firstName)}</h2>
               <p>Describe the academic support you need.</p>
             </div>
             <a class="secondary-button" href="#/profile">Edit profile</a>

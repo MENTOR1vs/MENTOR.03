@@ -110,7 +110,7 @@ export class AdminDashboardView {
           <header class="dashboard-header">
             <div>
               <p class="eyebrow">
-                ADMIN DASHBOARD
+               DASHBOARD
               </p>
 
               <h2>
