@@ -1,9 +1,20 @@
+/**
+ * Implements account registration and session management.
+ *
+ * Responsibilities:
+ * - Normalize email addresses.
+ * - Validate registration information.
+ * - Hash passwords with bcrypt.
+ * - Compare login passwords.
+ * - Generate JWT sessions.
+ * - Store JWTs in HttpOnly cookies.
+ * - Return only public user information.
+ */
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { pool } from "../db.js";
 
 // Normalizes and validates common auth-related data before processing requests.
-// Normaliza y valida datos comunes de autenticación antes de procesar las peticiones.
 function normalizeEmail(email = "") {
   return email.trim();
 }

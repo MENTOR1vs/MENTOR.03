@@ -1,7 +1,17 @@
+/**
+ * Implements the complete mentorship-request workflow.
+ *
+ * Responsibilities:
+ * - Filter requests by authenticated role.
+ * - Create pending Coder requests.
+ * - Edit or delete pending Coder requests.
+ * - Allow Mentors to accept or reject requests.
+ * - Validate future schedule dates.
+ * - Allow only the assigned Mentor to complete a request.
+ */
 import { pool } from "../db.js";
 
 // Maps mentorship records into a frontend-friendly structure.
-// Convierte los registros de mentoría a una estructura amigable para el frontend.
 function mapRequest(row) {
   return {
     id: row.id,
@@ -40,6 +50,14 @@ const requestSelect = `
   LEFT JOIN users mentor ON mentor.id = mentorship_requests.mentor_id
 `;
 
+/**
+ * Returns requests according to the active role.
+ *
+ * Coders receive their own requests.
+ * Mentors receive pending requests and requests assigned to them.
+ * Administrators currently receive the non-Coder branch if this endpoint
+ * is called directly.
+ */
 export async function listMentorships(request, response) {
   try {
     let result;

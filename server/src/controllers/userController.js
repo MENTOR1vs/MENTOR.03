@@ -1,7 +1,16 @@
+/**
+ * Implements profile, clan, and personal-goal operations.
+ *
+ * Responsibilities:
+ * - List available clans.
+ * - Return the authenticated user's profile.
+ * - Update profile information.
+ * - Create, list, update, and delete personal goals.
+ * - Ensure users can access only their own goals.
+ */
 import { pool } from "../db.js";
 
 // Maps database rows into the response shape used by the frontend.
-// Convierte filas de base de datos al formato de respuesta usado por el frontend.
 function mapUser(user) {
   return {
     id: user.id,

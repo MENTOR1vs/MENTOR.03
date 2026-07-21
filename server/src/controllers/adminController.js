@@ -1,3 +1,13 @@
+/**
+ * Builds the read-only administrative platform overview.
+ *
+ * The response includes:
+ * - User totals by role.
+ * - Request totals by status.
+ * - Registered users.
+ * - Mentors and their assigned requests.
+ * - Complete mentorship-request history.
+ */
 import { pool } from "../db.js";
 
 function mapRequest(row) {
@@ -45,6 +55,11 @@ function mapUser(row) {
   };
 }
 
+/**
+ * Executes the queries required by the administrative dashboard.
+ *
+ * The route middleware guarantees that only an ADMIN may call it.
+ */
 export async function getAdminOverview(
   _request,
   response,
