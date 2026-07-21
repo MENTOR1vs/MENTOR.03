@@ -1,3 +1,16 @@
+/**
+ *  Coordinates the read-only administrative dashboard.
+ * - Render the Administrator screen.
+ * - Load the platform overview.
+ * - Refresh administrative information.
+ * - End the authenticated session.
+ *
+ * Collaborates with:
+ * - AdminDashboardView
+ * - ApiService
+ * - AppRouter
+ * - alerts.js
+ */
 import { confirmAction, toast } from "../utils/alerts.js";
 
 export class AdminController {

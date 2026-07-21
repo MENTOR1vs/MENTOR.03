@@ -1,3 +1,15 @@
+/**
+ *  Coordinates the mentorship-request workflow.
+ 
+ * - Create mentorship requests.
+ * - Edit pending requests.
+ * - Delete pending requests.
+
+ * - View available and assigned requests.
+ * - Accept or reject pending requests.
+ * - Schedule accepted requests.
+ * - Complete assigned mentorships.
+ */
 import {
   confirmAction,
   promptEditRequest,

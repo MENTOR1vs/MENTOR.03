@@ -1,3 +1,11 @@
+/**
+ *  Coordinates login and account registration.
+ * - Load clans used by the registration form.
+ * - Render the selected authentication tab.
+ * - Submit login credentials.
+ * - Submit registration information.
+ * - Redirect users to the dashboard assigned to their role.
+ */
 export class AuthController {
   constructor({ api, router, view, initialTab }) {
     this.api = api;

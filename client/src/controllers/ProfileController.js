@@ -1,3 +1,11 @@
+/**
+ * Coordinates profile updates and personal goals.
+ * - Load the authenticated profile.
+ * - Load available clans.
+ * - Update profile information.
+ * - Create, edit, complete, reopen, and delete goals.
+ * - Manage appearance controls exposed by the profile view.
+ */
 import { confirmAction, toast } from "../utils/alerts.js";
 
 // Manages profile updates and personal goals for the authenticated user.
