@@ -1,5 +1,4 @@
 // Renders the authentication experience for login and registration.
-// Renderiza la experiencia de autenticación para login y registro.
 export class AuthView {
   constructor(root) {
     this.root = root;
@@ -7,7 +6,6 @@ export class AuthView {
 
   render({ initialTab = "login", clans = [] } = {}) {
     // Builds the auth interface and injects the available clans into the form.
-    // Construye la interfaz de autenticación e inyecta los clanes disponibles en el formulario.
 
     this.root.innerHTML = `
       <section class="auth-page theme-light-locked">
@@ -197,7 +195,6 @@ export class AuthView {
 
   bindEvents({ onLogin, onRegister }) {
     // Connects the form actions to the controller callbacks.
-    // Conecta las acciones del formulario con los callbacks del controlador.
     const loginTab = this.root.querySelector("#login-tab");
     const registerTab = this.root.querySelector("#register-tab");
     const loginSection = this.root.querySelector("#login-section");

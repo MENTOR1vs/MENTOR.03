@@ -14,7 +14,6 @@ function formatDate(value) {
 }
 
 // Renders the coder dashboard for creating and tracking mentorship requests.
-// Renderiza el dashboard del coder para crear y seguir solicitudes de mentoría.
 export class CoderDashboardView {
   constructor(root) {
     this.root = root;
@@ -22,7 +21,6 @@ export class CoderDashboardView {
 
   render(user) {
     // Builds the layout where the coder can submit new requests and review existing ones.
-    // Construye el layout donde el coder puede enviar nuevas solicitudes y revisar las existentes.
     this.root.innerHTML = `
       <div class="dashboard-layout">
         <aside class="sidebar">
@@ -112,7 +110,6 @@ export class CoderDashboardView {
 
   bindEvents({ onCreate, onEdit, onDelete, onLogout }) {
     // Hooks the request form and action buttons to the controller methods.
-    // Vincula el formulario de solicitud y los botones de acción con los métodos del controlador.
     this.root.querySelector("#request-form").addEventListener("submit", (event) => {
       event.preventDefault();
 

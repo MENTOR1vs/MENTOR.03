@@ -1,3 +1,13 @@
+/**
+ *  Renders the read-only administrative overview.
+
+ * - Display summary metrics.
+ * - Display registered users and their roles.
+ * - Display Mentors and their assigned requests.
+ * - Display the complete mentorship-request history.
+ * - Provide refresh, profile, appearance, and logout controls.
+ *
+ */
 import { themeToggleTemplate, bindThemeToggle } from "../utils/theme.js";
 
 function escapeHtml(value = "") {
