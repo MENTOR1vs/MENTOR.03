@@ -1,4 +1,16 @@
-export class ApiService {
+/**
+ * Centralizes HTTP communication with the backend.
+ * - Build API URLs.
+ * - Send cookies with every request.
+ * - Serialize request bodies as JSON.
+ * - Parse JSON responses.
+ * - Convert failed responses into JavaScript errors.
+ * - Expose GET, POST, PUT, PATCH, and DELETE helpers.
+ */
+export class ApiService { //Small wrapper around the browser Fetch API.
+/**
+ * @param {string} baseUrl - Shared prefix for all API endpoints.
+ */
   constructor(baseUrl = "/api") {
     this.baseUrl = baseUrl;
   }
