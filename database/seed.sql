@@ -1,3 +1,13 @@
+/*
+ * MENTOR initial development data
+ *
+ * Inserts:
+ * - The four official clans.
+ * - A demo Coder.
+ * - A demo Mentor.
+ * - A sample mentorship request.
+ * - A default Administrator.
+ */
 INSERT INTO clans (name)
 VALUES
   ('Magdalena'),

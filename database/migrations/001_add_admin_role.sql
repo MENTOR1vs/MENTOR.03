@@ -1,3 +1,13 @@
+/*
+ * Migration 001: Add Administrator support
+ *
+ * Updates an existing database by:
+ * - Adding ADMIN to the accepted user roles.
+ * - Keeping the clan requirement only for Coders.
+ * - Creating or updating the default Administrator account.
+ *
+ * The transaction guarantees that all changes succeed together.
+ */
 BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
