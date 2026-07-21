@@ -10,25 +10,44 @@ import { MentorshipController } from "./controllers/MentorshipController.js";
 import { ProfileController } from "./controllers/ProfileController.js";
 import { AdminController } from "./controllers/AdminController.js";
 
-import {
-  setActiveUser,
-  applyUserPreferences
-} from "./utils/theme.js";
+import { setActiveUser,  applyUserPreferences} from "./utils/theme.js";
 
-const PUBLIC_ROUTES = new Set([
-  "/home",
-  "/login",
-  "/register"
-]);
+/**
+  Controls navigation in the MENTOR single-page application.
+ 
+ * - Read the current hash route.
+ * - Recover the authenticated session.
+ * - Protect private routes.
+ * - Redirect users according to their role.
+ * - Create the correct View and Controller.
+ * - Render the not-found screen.
+ *
+ * Public routes:
+ * - /
+ * - /login
+ * - /register
+ *
+ * Protected routes:
+ * - /coder
+ * - /mentor
+ * - /admin
+ * - /profile
+ */
+const PUBLIC_ROUTES = new Set([  "/home",  "/login",  "/register"]);
 
-const PROTECTED_ROUTES = new Set([
-  "/coder",
-  "/mentor",
-  "/admin",
-  "/profile"
-]);
+const PROTECTED_ROUTES = new Set([  "/coder",  "/mentor",  "/admin",  "/profile"]);
 
+//Coordinates route resolution and application screen rendering
 export class AppRouter {
+
+/**
+ * Creates the router.
+ *
+ * @param {object} dependencies
+ * @param {HTMLElement} dependencies.root - Main rendering container.
+ * @param {ApiService} dependencies.api - Shared API client.
+ */
+
   constructor({
     root,
     api
@@ -37,7 +56,9 @@ export class AppRouter {
     this.api = api;
     this.currentController = null;
   }
-
+/**
+ * Starts listening for hash changes and renders the initial route.
+ */
   start() {
     window.addEventListener(
       "hashchange",
