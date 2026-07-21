@@ -1,3 +1,12 @@
+/**
+ * Defines authentication API endpoints.
+ *
+ * Endpoints:
+ * - POST /api/auth/register
+ * - POST /api/auth/login
+ * - POST /api/auth/logout
+ * - GET  /api/auth/me
+ */
 import { Router } from "express";
 import {
   getCurrentUser,
@@ -8,10 +17,10 @@ import {
 import { authenticate } from "../middleware/authMiddleware.js";
 
 // Defines the authentication routes exposed by the API.
-// Define las rutas de autenticación expuestas por la API.
 export const authRouter = Router();
 
 authRouter.post("/register", register);
 authRouter.post("/login", login);
 authRouter.post("/logout", logout);
+// Session recovery requires a valid authentication cookie.
 authRouter.get("/me", authenticate, getCurrentUser);

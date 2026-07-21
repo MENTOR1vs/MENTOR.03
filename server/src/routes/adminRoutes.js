@@ -1,3 +1,13 @@
+/**
+ * Defines protected administrative endpoints.
+ *
+ * Endpoint:
+ * - GET /api/admin/overview
+ *
+ * Every administrative endpoint requires:
+ * - A valid session.
+ * - The ADMIN role.
+ */
 import { Router } from "express";
 
 import {

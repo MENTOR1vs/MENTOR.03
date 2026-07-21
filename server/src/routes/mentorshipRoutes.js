@@ -1,3 +1,12 @@
+/**
+ * Defines mentorship-request API endpoints.
+ *
+ * Endpoints:
+ * - GET    /api/mentorships
+ * - POST   /api/mentorships
+ * - PATCH  /api/mentorships/:id
+ * - DELETE /api/mentorships/:id
+ */
 import { Router } from "express";
 import {
   createMentorship,
@@ -7,7 +16,6 @@ import {
 } from "../controllers/mentorshipController.js";import {authenticate,requireRole} from "../middleware/authMiddleware.js";
 
 // Defines the mentorship request routes for coders and mentors.
-// Define las rutas de solicitudes de mentoría para coders y mentors.
 export const mentorshipRouter = Router();
 
 mentorshipRouter.get("/", authenticate, listMentorships);

@@ -1,3 +1,17 @@
+/**
+ * Defines profile, clan, and personal-goal endpoints.
+ *
+ * Public endpoint:
+ * - GET /api/users/clans
+ *
+ * Protected endpoints:
+ * - GET    /api/users/me
+ * - PUT    /api/users/me
+ * - GET    /api/users/me/goals
+ * - POST   /api/users/me/goals
+ * - PATCH  /api/users/me/goals/:id
+ * - DELETE /api/users/me/goals/:id
+ */
 import { Router } from "express";
 import {
   getClans,
@@ -13,7 +27,6 @@ import {
 } from "../controllers/userController.js";
 
 // Defines routes for profile data, clans, and personal goals.
-// Define rutas para datos de perfil, clanes y metas personales.
 export const userRouter = Router();
 
 userRouter.get("/clans", getClans);
