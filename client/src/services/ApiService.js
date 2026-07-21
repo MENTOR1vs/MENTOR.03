@@ -14,7 +14,14 @@ export class ApiService { //Small wrapper around the browser Fetch API.
   constructor(baseUrl = "/api") {
     this.baseUrl = baseUrl;
   }
-
+/**
+ * Sends an HTTP request and validates the response.
+ *
+ * @param {string} endpoint - API path appended to baseUrl.
+ * @param {RequestInit} options - Fetch configuration.
+ * @returns {Promise<object>} Parsed API response.
+ * @throws {Error} When the server cannot be reached or rejects the request.
+ */
   async request(endpoint, options = {}) {
     try {
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
