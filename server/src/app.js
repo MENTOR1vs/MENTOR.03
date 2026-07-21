@@ -1,3 +1,14 @@
+/**
+ * Configures the Express application.
+ *
+ * Responsibilities:
+ * - Enable CORS and cookie support.
+ * - Parse JSON request bodies.
+ * - Expose the health endpoint.
+ * - Register feature routers.
+ * - Handle unknown routes.
+ * - Handle unexpected errors.
+ */
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -5,13 +16,11 @@ import { pool } from "./db.js";
 import { authRouter } from "./routes/authRoutes.js";
 import { userRouter } from "./routes/userRoutes.js";
 import { mentorshipRouter } from "./routes/mentorshipRoutes.js";
-import {adminRouter} from "./routes/adminRoutes.js";
+import { adminRouter } from "./routes/adminRoutes.js";
 // Creates the Express application and registers the main API routes.
-// Crea la aplicación Express y registra las rutas principales de la API.
 export const app = express();
 
 // Enables CORS for the frontend origin and accepts cookies in browser requests.
-// Habilita CORS para el origen del frontend y acepta cookies en las peticiones del navegador.
 app.use(
   cors({
     origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
