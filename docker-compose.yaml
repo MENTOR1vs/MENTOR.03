@@ -1,4 +1,10 @@
+#MENTOR local development enviroment
+
+# This file starts PostgreSQL database, Express REST API
+#Vite frontend and pdAdmin database administration interface
+
 services:
+#Stores users, clans, mentorships request, and personal goals
   db:
     image: postgres:16-alpine
     container_name: mentor-db
@@ -9,16 +15,20 @@ services:
     ports:
       - "5432:5432"
     volumes:
+    #Persists PostgreSQL data between container restarts 
       - postgres_data:/var/lib/postgresql/data
+    #Creates the schema and seed data when the database volume is empty
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    
+    #Prevents dependent services from starting before postgreSQL is ready
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
-
+#Runs the express API and connects it to PostgreSQL
   api:
     build: ./server
     container_name: mentor-api
@@ -37,17 +47,20 @@ services:
     ports:
       - "${API_PORT}:3000"
     volumes:
+    #Mounts the backend source code for live development
       - ./server:/app
+    #Keeps container dependencies separate from the host computer
       - api_node_modules:/app/node_modules
     depends_on:
       db:
         condition: service_healthy
 
-
+#Runs the Vite single-page application 
   client:
     build: ./client
     container_name: mentor-client
     environment:
+    #Allows Vite forward / api requests to the Express container
       VITE_API_PROXY_TARGET: http://api:3000
     ports:
       - "${CLIENT_PORT}:5173"
@@ -57,7 +70,7 @@ services:
     depends_on:
       - api
 
-
+#Provides interface for inspecting PostgreSQL
   pgadmin:
     image: dpage/pgadmin4
     container_name: mentor-pgadmin
@@ -68,6 +81,7 @@ services:
       - "5050:80"
     depends_on:
       - db
+      #Named volumes to perserve database information and container dependencies
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
