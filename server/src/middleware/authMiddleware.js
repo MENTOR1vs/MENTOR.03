@@ -1,7 +1,13 @@
+/**
+ * Protects API routes using session authentication and roles.
+ *
+ * Exports:
+ * - authenticate: validates the JWT stored in the HttpOnly cookie.
+ * - requireRole: restricts an endpoint to selected user roles.
+ */
 import jwt from "jsonwebtoken";
 
 // Verifies the session token and attaches the authenticated user to the request.
-// Verifica el token de sesión y adjunta el usuario autenticado a la petición.
 export function authenticate(request, response, next) {
   const cookieName = process.env.COOKIE_NAME || "mentor_session";
   const token = request.cookies[cookieName];
@@ -25,7 +31,6 @@ export function authenticate(request, response, next) {
 }
 
 // Restricts access to routes based on the user's role.
-// Restringe el acceso a rutas según el rol del usuario.
 export function requireRole(...allowedRoles) {
   return function roleMiddleware(request, response, next) {
     if (!allowedRoles.includes(request.user.role)) {
