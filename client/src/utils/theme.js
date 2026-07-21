@@ -1,6 +1,18 @@
 // Theme + accent-color engine. Preferences are namespaced per signed-in
 // user (mentor-theme:<userId> / mentor-accent:<userId>) so switching
 // accounts on the same browser never leaks one user's settings to another.
+
+/**
+ * Manages visual preferences for authenticated users.
+ *
+ * Supported preferences:
+ * - Light theme.
+ * - Dark theme.
+ * - Custom accent color.
+ *
+ * Preferences are stored in localStorage using the active user ID,
+ * preventing one account from overwriting another account's settings.
+ */
 import { toast } from "./alerts.js";
 
 const DEFAULT_ACCENT = "#2563eb";

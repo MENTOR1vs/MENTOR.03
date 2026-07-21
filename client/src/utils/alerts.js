@@ -1,3 +1,11 @@
+/**
+ * Provides reusable SweetAlert2 dialogs and notifications.
+ * - Apply theme-aware alert options.
+ * - Display confirmation dialogs.
+ * - Display toast notifications.
+ * - Collect request-edit information.
+ * - Escape user-controlled values inserted into dialog HTML.
+ */
 import Swal from "sweetalert2";
 
 import { getCurrentTheme } from "./theme.js";
